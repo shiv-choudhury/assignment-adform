@@ -1,18 +1,78 @@
-# React + Vite
+# Adform Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-page React + Vite app for browsing and filtering ad campaigns. Includes:
 
-Currently, two official plugins are available:
+- Date-range and text filters for campaigns
+- Theme toggle powered by Redux Toolkit
+- Skeleton loading state
+- Vitest + Testing Library for unit tests
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
 
-## React Compiler
+- Node.js 20.x (LTS) or later
+- npm 10.x (ships with Node 20)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 1. Install Dependencies
 
-Note: This will impact Vite dev & build performances.
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+## 2. Run the App Locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run dev
+```
+
+The Vite dev server prints a local URL (default `http://localhost:5173`). The app automatically reloads when you save changes.
+
+## 3. Lint the Code
+
+```bash
+npm run lint
+```
+
+This runs ESLint with the project’s config to enforce formatting and React best practices.
+
+## 4. Run Unit Tests
+
+The project uses Vitest + Testing Library + JSDOM. There are two ways to run tests:
+
+```bash
+# run tests once in CI mode
+npx vitest run
+
+# run tests in watch mode
+npx vitest
+
+# optional UI runner
+npx vitest --ui
+```
+
+Vitest picks up any file ending in `.test.{js,jsx}` under `src/`.
+
+## 5. File Structure Highlights
+
+- `src/components/` – UI components (e.g., `Campaigns`, `Skeleton`)
+- `src/store/` – Redux Toolkit store + theme slice
+- `src/test/` – Vitest suites (e.g., `Campaign.test.jsx`, `setup.js`)
+- `src/data/dummydata.json` – mock campaign data used by the API layer
+
+## 6. Updating Campaign Data Manually
+
+The app exposes a helper while running locally:
+
+```js
+globalThis.addCampaign([
+  {
+    id: 999,
+    name: "Test",
+    startDate: "...",
+    endDate: "...",
+    budget: 200,
+    active: true
+  }
+]);
+```
+
+Use this from the browser console to append campaigns dynamically during manual testing.
