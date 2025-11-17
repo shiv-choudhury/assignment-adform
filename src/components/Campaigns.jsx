@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import CAMPAIGNDATA from "./../data/dummydata.json";
 import { getCampaigns } from "../apis/campaign";
 import { Search } from "lucide-react";
+import Skeleton from "./Skeleton";
 
 export default function Campaigns() {
+  const [loading, setLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   const [input, setInput] = useState("");
   const [search, setSearch] = useState("");
@@ -13,7 +15,7 @@ export default function Campaigns() {
   const [originalCampaigns, setOriginalCampaigns] = useState([]);
 
   useEffect(() => {
-    window.addCampaign = function (arr) {
+    globalThis.addCampaign = function (arr) {
       //  reset the start and end date
       setStartDate("");
       setEndDate("");
@@ -31,12 +33,15 @@ export default function Campaigns() {
 
   const fetchCampaigns = async () => {
     try {
+      setLoading(true);
       const response = await getCampaigns();
       console.log(response);
       setCampaigns(CAMPAIGNDATA);
       setOriginalCampaigns(CAMPAIGNDATA);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,6 +107,57 @@ export default function Campaigns() {
 
     setCampaigns(filteredCampaigns);
   }, [search, startDate, endDate, originalCampaigns]);
+
+  const renderTableBody = () => {
+    if (loading) {
+      return [
+        <tr key="loading">
+          <td colSpan={5} className="text-center p-4">
+            <Skeleton height="h-4" width="w-full" pulse />
+            <Skeleton height="h-4" width="w-full" pulse />
+            <Skeleton height="h-4" width="w-full" pulse />
+            <Skeleton height="h-4" width="w-full" pulse />
+            <Skeleton height="h-4" width="w-full" pulse />
+          </td>
+        </tr>
+      ];
+    }
+
+    if (campaigns.length > 0) {
+      return campaigns.map((campaign) => (
+        <tr key={campaign.id} className="hover:bg-gray-100">
+          <td className="py-2 px-4 border-b border-gray-300">
+            {campaign.name}
+          </td>
+          <td className="py-2 px-4 border-b border-gray-300">
+            {campaign.startDate}
+          </td>
+          <td className="py-2 px-4 border-b border-gray-300">
+            {campaign.endDate}
+          </td>
+          <td className="py-2 px-4 border-b border-gray-300">
+            $ {campaign.budget}
+          </td>
+          <td className="py-2 px-4 border-b border-gray-300 flex items-center gap-2">
+            <span
+              className={`w-3 h-3 rounded-[50%] ${
+                campaign.active ? "bg-green-500" : "bg-red-500"
+              }`}
+            ></span>
+            {campaign.active ? "Active" : "Inactive"}
+          </td>
+        </tr>
+      ));
+    }
+
+    return [
+      <tr key="no-campaigns">
+        <td colSpan={5} className="text-center py-4">
+          No campaigns found
+        </td>
+      </tr>
+    ];
+  };
 
   return (
     <div>
@@ -188,32 +244,7 @@ export default function Campaigns() {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {campaigns.map((campaign) => (
-                <tr key={campaign.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b border-gray-300">
-                    {campaign.name}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300">
-                    {campaign.startDate}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300">
-                    {campaign.endDate}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300">
-                    $ {campaign.budget}
-                  </td>
-                  <td className="py-2 px-4 border-b border-gray-300 flex items-center gap-2">
-                    <span
-                      className={`w-3 h-3 rounded-[50%] ${
-                        campaign.active ? "bg-green-500" : "bg-red-500"
-                      }`}
-                    ></span>
-                    {campaign.active ? "Active" : "Inactive"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            <tbody>{renderTableBody()}</tbody>
           </table>
         </div>
       </div>
