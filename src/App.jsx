@@ -1,8 +1,13 @@
 import "./App.css";
+import Campaigns from "./components/Campaigns";
+import WindowData from "./components/WindowData";
 
 function App() {
   return (
-    <div className="text-3xl font-bold underline text-amber-400">Hello</div>
+    <div className="container mx-auto p-4">
+      {/* <WindowData /> */}
+      <Campaigns />
+    </div>
   );
 }
 
