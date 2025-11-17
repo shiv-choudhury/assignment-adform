@@ -122,12 +122,11 @@ export default function Campaigns() {
               setInput(e.target.value);
             }}
           />
-          {/* lucide search icon */}
           <Search className="text-gray-400" />
         </div>
         {/* date input - start date and end date */}
         <div className="flex gap-2">
-          <label htmlFor="start-date" className="self-center">
+          <label htmlFor="start-date" className="self-center whitespace-nowrap">
             Start Date:
           </label>
           <input
@@ -145,7 +144,7 @@ export default function Campaigns() {
               // }
             }}
           />
-          <label htmlFor="end-date" className="self-center">
+          <label htmlFor="end-date" className="self-center whitespace-nowrap">
             End Date:
           </label>
           <input
