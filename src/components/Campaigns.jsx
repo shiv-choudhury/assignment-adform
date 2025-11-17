@@ -111,7 +111,7 @@ export default function Campaigns() {
   const renderTableBody = () => {
     if (loading) {
       return [
-        <tr key="loading">
+        <tr data-testid="loader" key="loading">
           <td colSpan={5} className="text-center p-4">
             <Skeleton height="h-4" width="w-full" pulse />
             <Skeleton height="h-4" width="w-full" pulse />
