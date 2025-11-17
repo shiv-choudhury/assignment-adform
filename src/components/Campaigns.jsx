@@ -13,6 +13,7 @@ export default function Campaigns() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [originalCampaigns, setOriginalCampaigns] = useState([]);
+  const [isCustomData, setIsCustomData] = useState(false);
 
   useEffect(() => {
     globalThis.addCampaign = function (arr) {
@@ -21,6 +22,7 @@ export default function Campaigns() {
       setEndDate("");
       if (Array.isArray(arr)) {
         setCampaigns(arr);
+        setIsCustomData(true);
       } else {
         console.error("getData expects an array");
       }
@@ -35,7 +37,7 @@ export default function Campaigns() {
     try {
       setLoading(true);
       const response = await getCampaigns();
-      console.log(response);
+      console.table(response.data);
       setCampaigns(CAMPAIGNDATA);
       setOriginalCampaigns(CAMPAIGNDATA);
     } catch (error) {
@@ -159,6 +161,14 @@ export default function Campaigns() {
     ];
   };
 
+  const handleClearCustomData = () => {
+    fetchCampaigns();
+    setIsCustomData(false);
+    setSearch("");
+    setStartDate("");
+    setEndDate("");
+  };
+
   return (
     <div>
       <div className="flex justify-between gap-4 mb-4">
@@ -224,6 +234,14 @@ export default function Campaigns() {
       <div>
         {/* table */}
         <div className="overflow-x-auto">
+          {isCustomData && (
+            <button
+              className="mb-2 border border-gray-300 rounded px-2 py-1"
+              onClick={handleClearCustomData}
+            >
+              Clear Custom data
+            </button>
+          )}
           <table className="min-w-full border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
